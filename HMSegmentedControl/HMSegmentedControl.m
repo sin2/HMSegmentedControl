@@ -416,13 +416,18 @@
                 textWidth = [self.segmentWidthsArray[idx] floatValue];
             }
             
+            CGFloat spacerImageText = 2.0f;
             CGFloat imageYOffset = roundf((CGRectGetHeight(self.frame) - self.selectionIndicatorHeight) / 2.0f);
+            imageYOffset = imageYOffset - (imageHeight/2);
+            imageXOffset = imageXOffset - ([self measureTitleAtIndex:idx].width/2) - spacerImageText;
+            textXOffset += (imageWidth + spacerImageText)/2;
+            
             CGRect imageRect = CGRectMake(imageXOffset, imageYOffset, imageWidth, imageHeight);
             CGRect textRect = CGRectMake(textXOffset, yOffset, textWidth, stringHeight);
             
             // Fix rect position/size to avoid blurry labels
             textRect = CGRectMake(ceilf(textRect.origin.x), ceilf(textRect.origin.y), ceilf(textRect.size.width), ceilf(textRect.size.height));
-
+            
             CATextLayer *titleLayer = [CATextLayer layer];
             titleLayer.frame = textRect;
             titleLayer.alignmentMode = kCAAlignmentCenter;
@@ -430,9 +435,10 @@
             if ([UIDevice currentDevice].systemVersion.floatValue < 10.0 ) {
                 titleLayer.truncationMode = kCATruncationEnd;
             }
+
             CALayer *imageLayer = [CALayer layer];
             imageLayer.frame = imageRect;
-			
+            
             if (self.selectedSegmentIndex == idx) {
                 if (self.sectionSelectedImages) {
                     UIImage *highlightIcon = [self.sectionSelectedImages objectAtIndex:idx];
